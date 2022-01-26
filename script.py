@@ -10,27 +10,26 @@ class HashMap():
       return sum(key.encode()) % self.array_size 
 
     def assign(self, key, value):
-      array_index = self.hash(key)
-      payload = Node([key, value])
-      list_at_array = self.array[array_index]
-      for item in list_at_array:
-        if key == item[0]:
-          item[1] = value
-          return
-      list_at_array.insert(payload)
+      array_index = self.hash(key) 
+      for item in self.array[array_index]: # starts as a list of empty linked lists
+        if key == item[0]: # has to treat each linked list (item) as if it has key:value pairs
+          item[1] = value # this will overwrite an existing value if a key matches
+          return # ends to not execute next command
+      self.array[array_index].insert(Node([key, value])) # if key does not match, insert a new node as head node with key:value pair
 
     def retrieve(self, key):
       array_index = self.hash(key)
-      list_at_index = self.array[array_index]
-      for item in list_at_index:
-        if key == item[0]:
-          return item[1]
-      return None
+      for item in self.array[array_index]: # searches through items in linked list at this index
+        if key == item[0]: # searches for specific key to return the value of
+          return item[1] # returns value when found
+      return None # if not found, cannot return so returns none
 
-blossom = HashMap(len(flower_definitions))
+blossom = HashMap(10)
 
 for flower in flower_definitions:
   blossom.assign(flower[0], flower[1])
 
-for flower in flower_definitions:
-  print(blossom.retrieve(flower[0]))
+for items in blossom.array:
+  for item in items:
+    print(item[0])
+
